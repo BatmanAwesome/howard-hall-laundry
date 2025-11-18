@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+
+# Data (ignore scraped output but NOT machines.json)
+data/status.json
+
+# Node
+node_modules/
+dist/
+build/
+
+# Env files
+.env
+*.env
+
+# macOS / Windows junk
+.DS_Store
+Thumbs.db
+
+.venv/
