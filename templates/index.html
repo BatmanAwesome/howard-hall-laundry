@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Laundry Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .machine-card { border-radius: 15px; transition: 0.3s; }
+        .status-free { border-left: 8px solid #28a745; background-color: #f8fff9; }
+        .status-busy { border-left: 8px solid #dc3545; background-color: #fff8f8; }
+        .badge-washer { background-color: #007bff; }
+        .badge-dryer { background-color: #6f42c1; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h1 class="text-center mb-4">🧺 Laundry Status</h1>
+        <div id="loading" class="text-center">Loading machines...</div>
+        <div id="dashboard" class="row g-3"></div>
+    </div>
+
+    <script>
+        async function updateDashboard() {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            const container = document.getElementById('dashboard');
+            document.getElementById('loading').style.display = 'none';
+            
+            container.innerHTML = data.map(m => `
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card machine-card shadow-sm h-100 ${m.available ? 'status-free' : 'status-busy'}">
+                        <div class="card-body">
+                            <span class="badge ${m.type === 'washer' ? 'badge-washer' : 'badge-dryer'} mb-2">
+                                ${m.type.toUpperCase()}
+                            </span>
+                            <h5 class="card-title">#${m.stickerNumber}</h5>
+                            <p class="card-text">
+                                ${m.available ? '<strong>Available</strong>' : 
+                                `<strong>${m.timeRemaining || 'Busy'}</strong> mins left`}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update every 30 seconds
+        updateDashboard();
+        setInterval(updateDashboard, 30000);
+    </script>
+</body>
+</html>
