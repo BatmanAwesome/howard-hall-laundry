@@ -10,7 +10,7 @@ def check_machine_status(url):
     
     try:
         driver.get(url)
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 3)
         
         # Try to find the machine name first
         try:
@@ -48,6 +48,6 @@ def check_machine_status(url):
         driver.quit()
 
 # Test it
-url = "https://mycscgo.com/laundry/press-start/8e6bbe77-24ac-49dc-99e9-2e4cb119ba0b"
-result = check_machine_status(url)
-print(result)
+#url = "https://mycscgo.com/laundry/press-start/8e6bbe77-24ac-49dc-99e9-2e4cb119ba0b"
+#result = check_machine_status(url)
+#print(result)
