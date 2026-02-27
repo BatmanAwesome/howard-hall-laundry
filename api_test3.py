@@ -57,6 +57,11 @@ def display_dashboard():
                     time_rem = m.get('timeRemaining', 0)
                     if time_rem and time_rem > 0:
                         status_str = f"🔴 {time_rem} mins left"
+                    # 2. Check if the controller is Offline
+                    elif m.get('mode') == "offline" or m.get('notAvailableReason') == "offline":
+                        status_str = "⚪ OFFLINE"
+                    
+                        
                     else:
                         status_str = f"🔴 BUSY ({m.get('notAvailableReason', 'In Use')})"
                 
