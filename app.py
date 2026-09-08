@@ -1,37 +1,27 @@
-from flask import Flask, render_template, jsonify
-import requests
+"""Flask entry point for the laundry dashboard."""
+from flask import Flask, jsonify, render_template
+
+from laundry import LaundryClient, LaundryUnavailable
 
 app = Flask(__name__)
+laundry = LaundryClient()
 
-ROOM_IDS = [
-    "8e6bbe77-24ac-49dc-99e9-2e4cb119ba0b", # Dryers
-    "31e7a700-d31a-4543-8be8-089f2b9302a8"  # Washers
-]
 
-def get_laundry_data():
-    all_machines = []
-    headers = {"accept": "application/json", "user-agent": "Mozilla/5.0"}
-    
-    for rid in ROOM_IDS:
-        try:
-            r = requests.get(f"https://mycscgo.com/api/v3/machine/info/{rid}", headers=headers)
-            if r.status_code == 200:
-                machines = r.json().get('machines', [])
-                all_machines.extend(machines)
-        except:
-            pass
-    
-    # Sort by sticker number
-    all_machines.sort(key=lambda x: x.get('stickerNumber', 0))
-    return all_machines
-
-@app.route('/')
+@app.get("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/api/status')
+
+@app.get("/api/status")
 def status():
-    return jsonify(get_laundry_data())
+    try:
+        response = jsonify(laundry.get_machines())
+    except LaundryUnavailable:
+        response = jsonify(error="Unable to refresh laundry status. Please try again shortly.")
+        response.status_code = 503
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+
+if __name__ == "__main__":
+    app.run(port=5000)

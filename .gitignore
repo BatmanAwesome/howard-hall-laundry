@@ -1,26 +1,17 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 .venv/
 env/
 venv/
 
-# Data (ignore scraped output but NOT machines.json)
-data/status.json
-
-# Node
-node_modules/
-dist/
-build/
-
-# Env files
+# Environment files
 .env
 *.env
 
-# macOS / Windows junk
+# OS junk
 .DS_Store
 Thumbs.db
 
-.venv/
+# Local output from the former scraper
+data/status.json
